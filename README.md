@@ -1,36 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Web Decoder
 
-## Getting Started
+## 檔案架構
 
-First, run the development server:
+- `src/app/page.tsx`: 此為程式進入點，使用 `Reader` 來顯示解碼器。
+- `src/features/FuncodeDecoder/index.tsx`: 此為解碼器的主組件，負責處理解碼邏輯，程式碼內容來自 Google Drive 提供的範例。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 錯誤內容
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 無法讀取 localstorage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![01](./screenshots/01.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 讀取 wasm 會報錯
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+![02](./screenshots/02.png)
