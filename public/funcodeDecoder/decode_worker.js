@@ -1,5 +1,5 @@
-importScripts('encoding.js');
-importScripts('decode_demo.js');
+importScripts('/funcodeDecoder/encoding.js');
+importScripts('/funcodeDecoder/decode_demo.js');
 
 // domain check 的部分使用 lifftestlocaltest 做為開發的啟動碼
 const errorMap = new Map([

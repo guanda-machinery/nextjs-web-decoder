@@ -14,3 +14,20 @@
 ### 讀取 wasm 會報錯
 
 ![02](./screenshots/02.png)
+
+## 修改內容
+
+### 讀取 wasm 會報錯
+
+![03](./screenshots/03.png)
+- next必須使用完整的絕對路徑 /funcodeDecoder/encoding.js 來確保正確載入
+
+### 無法讀取 localstorage
+
+![04](./screenshots/04.png)
+- 在next先檢查 window 是否存在
+
+### delay屬性要是true
+
+![05](./screenshots/05.png)
+- 如果delay屬性是false預設是暫停元件

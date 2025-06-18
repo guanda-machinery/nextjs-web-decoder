@@ -103,23 +103,29 @@ const defaultStartupcodes = {
 const baseurii = "https://funaccount.azurewebsites.net";
 const state = {
   ifc: 0,
-  btc: localStorage.getItem("_fc_btc") || "",
-  jwt: localStorage.getItem("_fc_jwt") || "",
-  lit: localStorage.getItem("_fc_lit") || "",
+  btc: typeof window !== 'undefined' ? localStorage.getItem("_fc_btc") || "" : "",
+  jwt: typeof window !== 'undefined' ? localStorage.getItem("_fc_jwt") || "" : "",
+  lit: typeof window !== 'undefined' ? localStorage.getItem("_fc_lit") || "" : "",
   did: "",
-  rem: parseInt(localStorage.getItem("_fc_rem") || 0),
+  rem: typeof window !== 'undefined' ? parseInt(localStorage.getItem("_fc_rem") || 0) : 0,
   set: (n, v) => {
     state[n] = v;
-    localStorage.setItem(`_fc_${n}`, v);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`_fc_${n}`, v);
+    }
   },
   remove: (n) => {
     state[n] = n !== "rem" ? "" : 0;
-    localStorage.removeItem(`_fc_${n}`);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(`_fc_${n}`);
+    }
   },
   add: (n) => {
     state.rem += n;
     console.log(state.rem);
-    localStorage.setItem("_fc_rem", state.rem);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("_fc_rem", state.rem);
+    }
     return state.rem;
   },
   decoderReady: false,
@@ -133,6 +139,15 @@ const funDecoder = {
     return state.busy;
   },
   ready: function () {
+    console.log('Decoder states:', {
+      jwt: !!state.jwt,
+      lit: !!state.lit,
+      rem: state.rem,
+      decoderReady: state.decoderReady,
+      workerReady: state.workerReady,
+      busy: state.busy,
+      skipCountDown: skipCountDown
+    });
     return (
       state.jwt &&
       state.lit &&
@@ -383,13 +398,13 @@ export default ((_temp = _class =
             if (e.data.code >= 0) {
               if (e.data.act === "decode") {
                 state.busy = false;
-                if (this.props.debug) {
-                  document.querySelector(
-                    ".decode-time"
-                  ).innerText = `解碼所需時間: ${Math.round(
-                    performance.now() - state.lastPostMessage
-                  )} 毫秒`;
-                }
+                // if (this.props.debug) {
+                //   document.querySelector(
+                //     ".decode-time"
+                //   ).innerText = `解碼所需時間: ${Math.round(
+                //     performance.now() - state.lastPostMessage
+                //   )} 毫秒`;
+                // }
 
                 if (e.data.msg !== "") {
                   if (state.add(-1) <= 0) {
@@ -445,13 +460,16 @@ export default ((_temp = _class =
           // 優先使用從 app.js 載入的 decoder 檔案
           if (window.Worker) {
             this.worker = new Worker(
-              `${process.env.PUBLIC_URL}/funcodeDecoder/decode_worker.js`,
+              new URL('/funcodeDecoder/decode_worker.js', window.location.origin).href,
               {
                 type: "classic",
               }
             );
             this.worker.onmessage = handleWorkerResponseMessage.bind(this);
-            this.worker.onerror = onError;
+            this.worker.onerror = (error) => {
+              console.error('Worker error:', error);
+              onError(error);
+            };
           } else {
             console.error("Worker not supported.");
             alert("Worker not supported.");
@@ -755,9 +773,9 @@ export default ((_temp = _class =
           var height = Math.floor(
             legacyMode ? img.naturalHeight : preview?.videoHeight
           );
-          document.querySelector(
-            ".decode-size"
-          ).innerText = `寬: ${width} 高:${height}`;
+          // document.querySelector(
+          //   ".decode-size"
+          // ).innerText = `寬: ${width} 高:${height}`;
           if (!width || !height) return;
 
           // Canvas draw offsets
@@ -804,9 +822,9 @@ export default ((_temp = _class =
               height
             );
 
-            document.querySelector(
-              ".decode-canvas-size"
-            ).innerText = `Canvas寬: ${canvas.width} Canvas高:${canvas.height}`;
+            // document.querySelector(
+            //   ".decode-canvas-size"
+            // ).innerText = `Canvas寬: ${canvas.width} Canvas高:${canvas.height}`;
             var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             // Send data to web-worker
             funDecoder.decode.bind(this)(imageData);
@@ -874,6 +892,7 @@ export default ((_temp = _class =
             facingMode = _props4.facingMode,
             zoom = _props4.zoom,
             constraints = _props4.constraints;
+            
 
           var containerStyle = {
             overflow: "hidden",
