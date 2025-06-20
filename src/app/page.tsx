@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 import Reader from "@/features/FuncodeDecoder";
 
@@ -32,7 +33,13 @@ export default function HomePage() {
         />
       </div>
 
-      <div className="text-lg font-bold">{scannedData || "No data"}</div>
+      <div className="text-lg font-bold">
+        Scanned Data: {scannedData || "No data"}
+      </div>
+
+      <Link className="bg-blue-500 text-white px-4 py-2 rounded" href="/about">
+        Go to About Page
+      </Link>
     </div>
   );
 }
